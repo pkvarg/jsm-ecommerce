@@ -1,3 +1,4 @@
+import product from '@/jsm-ecommerce/schemas/product'
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { toast } from 'react-hot-toast'
 
@@ -57,30 +58,34 @@ export const StateContext = ({ children }) => {
   const toggleCartItemQuanitity = (id, value) => {
     foundProduct = cartItems.find((item) => item._id === id)
     index = cartItems.findIndex((product) => product._id === id)
-    const newCartItems = cartItems.filter((item) => item._id !== id)
+    // const newCartItems = cartItems.filter((item) => item._id !== id)
+    const newCardItems = cartItems.map((item) =>
+      item._id === id ? { ...item, quantity: product.quantity + 1 } : item
+    )
 
     if (value === 'inc') {
-      setCartItems([
-        ...newCartItems,
-        { ...foundProduct, quantity: foundProduct.quantity + 1 },
-      ])
-      // const updatedData = cartItems.map((item) =>
-      //   item._id === id ? { ...item, quantity: item.quantity + 1 } : item
-      // )
-      // setCartItems(updatedData)
+      // setCartItems([
+      //   ...newCartItems,
+      //   { ...foundProduct, quantity: foundProduct.quantity + 1 },
+      // ])
+      newCardItems.map(
+        (item) => item._id === id && (item.quantity = foundProduct.quantity + 1)
+      )
+      setCartItems([...newCardItems])
 
       setTotalPrice((prevTotalPrice) => prevTotalPrice + foundProduct.price)
       setTotalQuantities((prevTotalQuantities) => prevTotalQuantities + 1)
     } else if (value === 'dec') {
       if (foundProduct.quantity > 1) {
-        setCartItems([
-          ...newCartItems,
-          { ...foundProduct, quantity: foundProduct.quantity - 1 },
-        ])
-        // const updatedData = cartItems.map((item) =>
-        //   item._id === id ? { ...item, quantity: item.quantity - 1 } : item
-        // )
-        // setCartItems(updatedData)
+        // setCartItems([
+        //   ...newCartItems,
+        //   { ...foundProduct, quantity: foundProduct.quantity - 1 },
+        // ])
+        newCardItems.map(
+          (item) =>
+            item._id === id && (item.quantity = foundProduct.quantity - 1)
+        )
+        setCartItems([...newCardItems])
 
         setTotalPrice((prevTotalPrice) => prevTotalPrice - foundProduct.price)
         setTotalQuantities((prevTotalQuantities) => prevTotalQuantities - 1)
